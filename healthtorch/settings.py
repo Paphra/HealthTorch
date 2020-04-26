@@ -174,7 +174,7 @@ SUMMERNOTE_CONFIG = {
 ALLOWED_HOSTS = [
     '0.0.0.0', 'localhost', 
     '127.0.0.1', 
-    'healthtorch.herokuapp.com'
+    'htug.herokuapp.com'
 ]
 
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
