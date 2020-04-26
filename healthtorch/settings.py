@@ -182,8 +182,8 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 DEBUG = False
 
-INSTALLED_APPS += ('whitenoise.runserver_nostatic',)
-MIDDLEWARE += ('whitenoise.middleware.WhiteNoiseMiddleware',)
+#INSTALLED_APPS += ('whitenoise.runserver_nostatic',)
+#MIDDLEWARE += ('whitenoise.middleware.WhiteNoiseMiddleware',)
 #STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 #STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
