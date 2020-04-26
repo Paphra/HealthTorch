@@ -1,0 +1,1 @@
+web: gunicorn healthtorch.wsgi --log-file -
