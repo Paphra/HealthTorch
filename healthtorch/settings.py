@@ -186,4 +186,4 @@ INSTALLED_APPS += ('whitenoise.runserver_nostatic',)
 MIDDLEWARE += ('whitenoise.middleware.WhiteNoiseMiddleware',)
 #STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+#STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
