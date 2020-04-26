@@ -87,7 +87,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'healthtorch',
-        'USER': 'paphra',
+        'USER': 'Paphra',
         'PASSWORD': 'Pephreto21',
         'HOST': 'localhost',
         'PORT': '',
