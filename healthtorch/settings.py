@@ -180,7 +180,7 @@ ALLOWED_HOSTS = [
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
-DEBUG = False
+DEBUG = True
 
 INSTALLED_APPS += ('whitenoise.runserver_nostatic',)
 MIDDLEWARE += ('whitenoise.middleware.WhiteNoiseMiddleware',)
