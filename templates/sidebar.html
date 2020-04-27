@@ -1,18 +1,102 @@
-{% block sidebar %}
-	<style>
-		.card{
-			box-shadow: 0 16px 48px #E2E7EB;
-		}
-	</style>
-
-	<!-- Sidebar Widgets Column -->
-	<diiv class="col-md-4 float-right">
-		<div class="card my-4">
-			<h5 class="card-header">About Us</h5>
-			<div class="card-body">
-				<p class="card-text">This is a Health Information Platform for the latest Health related news in Uganda and accross the globe.</p>
-				<a href="#about" class="btn btn-danger">Know More!</a>
+<div class="col-sm-3 card shadow">
+  <br/>
+  <h5 class="text-center"><i>Filter By<i></h5>
+  <hr/>
+  <form action="{% url 'blog:filter' %}" method="GET">
+    <div class="form-group input-group">
+      <label for="section" class="text-right form-control">
+        <small>Section</small></label>
+      <select id="section" name="section" class="form-control">
+        <option value="Posts" {% if atposts %}selected{% endif %}>Posts</option>
+        <option value="Questions" {% if atquestions %}selected{% endif %}>Questions</option>
+      </select>
+    </div>
+    <div class="form-group input-group">
+      <label for="month" class="text-right form-control">
+        <small>Month</small></label>
+      <input type="hidden" value="{% if f_month %}{{f_month}}{% endif %}" id="f_month" />
+      <select name="month" id='month' class="form-control">
+      </select>
+    </div>
+    <div class="form-group input-group">
+      <label id='year_lb' for="year" class="text-right form-control"></label>
+      <input name="year" class="form-control" 
+        type="number" onChange="getMonths()" id="year" min='2000'
+        value="{% if f_year %}{{f_year}}{% endif %}"/>
+    </div>
+    <button type="submit" class="btn btn-block btn-success">
+      Filter</button>
+  </form>
+  <hr/>
+  <ul class="nav flex-column">
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle {% if atcategories %}active{% endif %}"
+        data-toggle="collapse" href="#categories" role="button" 
+        aria-haspopup="true" aria-expanded="false">Categories</a>
+      <div id="categories" calss="collapse show">
+        {% for category in categories %}
+          <a class="dropdown-item dropdown-toggle"
+            data-toggle="collapse" href="#d_{{category.id}}" role="button" 
+            aria-haspopup="true" aria-expanded="false">{{category.name}}</a>
+          <div id="d_{{category.id}}" class="collapse">
+            <a class="dropdown-item" 
+						  href="{% url 'blog:posts_category' category.id %}">
+						  <small style="margin-left:10px">Posts 
+                <span class="badge badge-danger">{{category.posts.count}}</span>
+              </small>
+            </a>
+            <a class="dropdown-item" 
+						  href="{% url 'blog:questions_category' category.id %}">
+						  <small  style="margin-left:10px">Questions 
+                <span class="badge badge-danger">{{category.questions.count}}</span>
+              </small>
+            </a>
+          </div>
+        {% endfor %}
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item {% if atcategories %}active{% endif %}"
+          href="{% url 'blog:categories' %}">
+          All Categories <span class="badge badge-success">{{categories.count}}<span></a>
 			</div>
-		</div>
-	</div>
-{% endblock sidebar %}
+		</li>
+    
+    <hr/>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle"
+        data-toggle="collapse" href="#time" role="button" 
+        aria-haspopup="true" aria-expanded="true">Periods</a>
+      <div id="time" class="collapse show">
+  	    <a class="dropdown-item dropdown-toggle"
+            data-toggle="collapse" href="#p_week" role="button" 
+            aria-haspopup="true" aria-expanded="false">Last 7 Days</a>
+        <div id="p_week" class="collapse">
+          <a class="dropdown-item" 
+				    href="{% url 'blog:posts_last' 7 %}">
+					  <small style="margin-left:10px">Posts</span>
+            </small>
+          </a>
+          <a class="dropdown-item" 
+				    href="{% url 'blog:questions_last' 7 %}">
+					  <small style="margin-left:10px">Questions</span>
+            </small>
+          </a>
+        </div>
+        <a class="dropdown-item dropdown-toggle"
+            data-toggle="collapse" href="#p_month" role="button" 
+            aria-haspopup="true" aria-expanded="false">Last 30 Days</a>
+        <div id="p_month" class="collapse">
+          <a class="dropdown-item" 
+				    href="{% url 'blog:posts_last' 30 %}">
+					  <small style="margin-left:10px">Posts</span>
+            </small>
+          </a>
+          <a class="dropdown-item" 
+				    href="{% url 'blog:questions_last' 30 %}">
+					  <small style="margin-left:10px">Questions</span>
+            </small>
+          </a>
+        </div>
+			</div>
+		</li>
+	</ul>
+</div>

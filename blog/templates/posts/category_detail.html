@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+	
+	<div id="arrive"></div>
+	<div></div>
+	<div class="row">
+		<div class="col-sm-9">
+			<h4><b>Posts in <i>{{category.name}}</i></b></h4>
+			<hr/>
+			{% if page_obj %}
+				<ul class="list-unstyled">
+					{% for post in page_obj %}
+						{% include "posts/post.html" %}
+					{% endfor %}
+				</ul>
+				{% include "pagination.html" %}
+			{% else %}
+				<p><i>There Are No Posts In this Category</i></p>
+			{% endif %}
+		</div>
+		{% include "sidebar.html" %}
+	</div>
+{% endblock content %}

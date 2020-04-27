@@ -1,5 +1,5 @@
 from django.contrib.sitemaps import Sitemap
-from .models import Post
+from .models_posts import Post
 
 class PostSitemap(Sitemap):
 	changefreq = "daily"

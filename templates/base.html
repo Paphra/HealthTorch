@@ -1,62 +1,288 @@
-{% load static %}
+<doctype html>
+<html lang='en'>
+  <head>
+    {% load static %}
 
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>HT Ug</title>
-		<link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
-    <meta name="google" content="notranslate" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{title}} | HT Ug</title>
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     
-		<!-- Bootstrap 4 -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" 
       crossorigin="anonymous" />
-		
-		<!-- Material Icons -->
-		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	
-		<!-- Custom CSS -->
-		<link rel="stylesheet" href="{% static 'css/base.css' %}" />
-	</head>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css" />
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    
+    <!-- Scrollbars-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css" />
+    
+    <!-- Custom CSS -->
+    <link rel='stylesheet', href="{% static 'stylesheets/style.css' %}" />
+    
+    <!-- FontAwesome -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
+      integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ"
+      crossorigin="anonymous" ></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" 
+      integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" 
+      crossorigin="anonymous" ></script>
+  </head>
+  <body>
+    <div class="wrapper">
+      {% block navigation %}
+        <nav class="navbar navbar-expand-md sticky-top navbar-dark bg-primary shadow">
+          <!-- Navbar content -->
+          <div class="container">
+            <a class="navbar-brand" href="{% url 'blog:index' %}">Health Torch Uganda</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" 
+              data-toggle="collapse" data-target="#navbarTogglerDemo02" 
+              aria-controls="navbarTogglerDemo02" aria-expanded="false" 
+              aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
 
-	<body>
-		
-		<!-- Navigation -->
-		<nav class="navbar navbar-expand-lg navbar-light bg-light shadow sticky-top" id="mainNav">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'home' %}">Health Torch Uganda</a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" 
-					data-toggle="collapse" data-target="#navbarResponsive"
-          aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item text-black">
-              <a class="nav-link text-black font-weight-bold" href="#">About</a>
-            </li>
-      	    <li class="nav-item text-black">
-              <a class="nav-link text-black font-weight-bold" href="#">Policy</a>
-            </li>
-            <li class="nav-item text-black">
-              <a class="nav-link text-black font-weight-bold" href="#">Contact</a>
-            </li>
-          </ul>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+              <ul class="navbar-nav mr-auto">
+                <li class="nav-item {% if athome %}active{% endif %}">
+                  <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item {% if atposts %}active{% endif %}"> 
+                  <a class="nav-link" href="{% url 'blog:posts_index' %}">Posts</a>
+                </li>
+                <li class="nav-item {% if atquestions %}active{% endif %}">
+                  <a class="nav-link" href="{% url 'blog:questions_index' %}">Questions</a>
+                </li>
+                <li class="nav-item {% if atabout %}active{% endif %}">
+                  <a class="nav-link" href="{% url 'blog:about' %}">About</a>
+                </li>
+              </ul>
+              
+              <ul class="navbar-nav navbar-right">
+                <li class="nav-item bg-white">
+                  <a class="nav-link text-danger" 
+                    href="{% url 'blog:questions_ask' %}">Ask</a>
+                </li>
+                {% if c_user.is_authenticated %}
+                  {% if c_user.groups %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="/admin">Dashboard</a>
+                    </li>
+                    <li class="nav-item {% if atimages %}active{% endif %}">
+                      <a class="nav-link" href="{% url 'blog:images' %}">Images</a>
+                    </li>
+                  {% endif %}
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'blog:logout' %}">
+                      <span class="fas fa-sign-out-alt"></span>
+                    </a>
+                  </li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        </nav>
+      {% endblock navigation %}
+      <div id="content" style="margin-top:30px">
+        <div class="container">
+          {% if search %}
+            <div class="row">
+              <div class="col-sm-6"></div>
+              <div class="col-sm-6">
+                <form class="form-inline" action="{% url 'blog:search' %}">
+                  <div class="row shadow" style="margin-left: 10px;">
+                    <select name="s" class="col-4 form-control">
+                      <option value="Posts" {% if atposts %}selected{% endif %}>Posts</option>
+                      <option value="Questions" {% if atquestions %}selected{% endif %}>Questions</option>
+                    </select>
+                    <input class="form-control col-6" value="{% if query %}{{query}}{% endif %}" 
+                      name="q" type="search" placeholder="Search ..." min="1"
+                      autofocus>
+                    <button class="btn btn-success col-2" type="submit">
+                      <i class="fas fa-search"></i></button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <hr/>
+          {% endif %}
+
+          {% block content %}
+          {% endblock content %}
         </div>
       </div>
-    </nav>
+    </div>
+    {% block footer %}
+      <hr/>
+      <footer class="footer bg-success">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-6">
+              <p class="text-center"><i>Get Timely Updates</i></p>
+              <form action="{% url 'blog:subscribe' %}" method="POST">
+                {% csrf_token %}
+                <div class="row form-group">
+                  <div class="col-6">
+                    <input class="form-control" name="first_name" maxlength='30' 
+                      type="text" placeholder='First Name'/>
+                  </div>
+                  <div class="col-6">
+                    <input class="form-control" name="last_name" maxlength='30' 
+                      type="text" placeholder='Last Name'/>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-8">
+                    <input class="form-control" name="email" maxlength='30' 
+                      type="email" placeholder='Email Address'/>
+                  </div>
+                  <div class="col-4">
+                    <button type="submit" class="btn btn-primary btn-block">Subscribe</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="col-sm-3"></div>
+          </div>
+          <hr/>
+          <div class="row">
+            <div class="col-sm-9">
+              <h4>Useful Internal Links</h4>
+              <hr/>
+              <div class="row">
+                <div class="col-sm-4">
+                  <ul class="list-group">
+                    <li class="list-group-item {% if athome %}active{% endif %}">
+                      <a href="/">Home <span class="fas fa-home"></span></a>
+                    </li>
+                    <li class="list-group-item {% if atposts %}active{% endif %}"> 
+                      <a href="{% url 'blog:posts_index' %}">
+                        Posts <span class="fas fa-book-open"></span>
+                      </a>
+                    </li>
+                    <li class="list-group-item {% if atquestions %}active{% endif %}">
+                      <a href="{% url 'blog:questions_index' %}">
+                        Questions <span class="fas fa-question"></span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-sm-4">
+                  <ul class="list-group">
+                    <li class="list-group-item {% if atabout %}active{% endif %}">
+                      <a href="{% url 'blog:about' %}" >
+                        About <span class="fas fa-info"></span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-sm-4">
+                  <ul class="list-group">
+                    {% if c_user.is_authenticated %}
+                      {% if c_user.groups %}
+                        <li class="list-group-item">
+                          <a href="/admin">
+                            Dashboard <span class="fas fa-user-cog"></span>
+                          </a>
+                        </li>
+                        <li class="list-group-item {% if atimages %}active{% endif %}">
+                          <a href="{% url 'blog:images' %}">
+                            Images <span class="fas fa-image"></span>
+                          </a>
+                        </li>
+                      {% endif %}
+                      <li class="list-group-item">
+                        <a href="{% url 'blog:logout' %}">
+                          Logout <span class="fas fa-sign-out-alt"></span>
+                        </a>
+                      </li>
+                    {% endif %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3 text-right">
+              <a class="btn btn-primary" href='#top'> <span class="fas fa-arrow-up"></span></a>
+              <hr/>
+              <p>&copy; Copyright <b id='copy_year'></b></p>
+              <p>Health Toruch Uganda 1.0</p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    {% endblock footer %}
 
-		{% block content %}
-			<!-- Content Goes Here-->
-		{% endblock content %}
+    <!-- Scripts -->
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" 
+      integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" 
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+      
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" 
+      crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" 
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" 
+      crossorigin="anonymous"></script>
+    <!-- Bootstrap Table JS -->
+    <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/extensions/export/bootstrap-table-export.min.js"></script>
+    <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+    <script src="https://unpkg.com/tableexport.jquery.plugin/libs/jsPDF/jspdf.min.js"></script>
+    <script src="https://unpkg.com/tableexport.jquery.plugin/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/extensions/print/bootstrap-table-print.min.js"></script>
 
-		<!-- Footer -->
-		<footer class="py-3 bg-grey">
-			<p class="m-0 text-dark text-center">Copyright &copy; Health Torch Uganda</p>
-		</footer>
-	</body>
+    <!-- Bootstrap Graphs JS -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.15.0/js/mdb.min.js"></script>
+    
+    <!-- Text editor 
+    <script 
+      type="text/javascript" 
+      src="//s3-us-west-1.amazonaws.com/xinha/xinha-latest/XinhaEasy.js">
+      //xinha_options = {xinha_editors:  'textarea.text'}
+    </script>
+    -->
 
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="{% static 'javascripts/custom.js' %}"></script>
+    <script>
+      var date = new Date();
+      var year = date.getFullYear();
+      var c_month = date.getMonth();
+      document.getElementById('copy_year').innerHTML = year;
+      var year_el = document.getElementById('year');
+      var f_month = document.getElementById('f_month').value;
+      if(year_el.value == ''){
+        year_el.value = year;
+      }
+      document.getElementById('year').max = year;
+      document.getElementById('year_lb').innerHTML = "<small><i class='fas fa-chevron-left'></i> "+ year + "<small>";
+      var months = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'];
+      var month_el = document.getElementById('month')
+      
+      getMonths();
+      function getMonths(){
+        var opts = "<option value='all'>All</option>";
+        if(parseInt(year_el.value) != year){
+          month = 11;
+        }else{
+          month = c_month
+        }
+        for(i=0; i<=month;i++){
+          var sel = '';
+          if (parseInt(f_month) == (i+1)){
+            sel = 'selected';
+          }
+          opts += "<option value='"+(i+1)+"' "+sel+">" + months[i]+"</option>";
+        }
+        month_el.innerHTML = opts;
+      }
+  
+    </script>
+  </body>
 </html>

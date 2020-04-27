@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	
+	<div id="arrive"></div>
+	<div></div>
+	<h4><i><b>{{title}}</b></i></h4>
+	<hr/>
+	<div class="row">
+		<div class="col-sm-9">
+			{% if page_obj %}
+				<ul class="list-unstyled">
+					{% for post in page_obj %}
+						{% include "posts/post.html" %}
+					{% endfor %}
+				</ul>
+				{% include "pagination.html" %}
+			{% else %}
+				<p><i>There are no Posts</i></p>
+			{% endif %}
+		</div>
+		{% include "sidebar.html" %}
+	</div>
+{% endblock content %}

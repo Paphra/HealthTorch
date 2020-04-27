@@ -167,7 +167,7 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 SUMMERNOTE_CONFIG = {
     'width': '100%',
     # You can disable attachment feature.
-    'disable_attachment': False,
+    'disable_attachment': True,
 }
 
 # Deplyment
@@ -184,10 +184,5 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEBUG = False
 
 DEBUG_PROPAGATE_EXCEPTIONS = True
-
-#INSTALLED_APPS += ('whitenoise.runserver_nostatic',)
-#MIDDLEWARE += ('whitenoise.middleware.WhiteNoiseMiddleware',)
-#STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 
 #STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'

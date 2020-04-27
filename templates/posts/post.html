@@ -1,0 +1,40 @@
+<li class="media card shadow">
+	<div class="row">
+		<div class="col-sm-5">
+			<img class="card-image rounded" width="100%" src="data:image/jpg;base64,{{post.image.data}}" />
+			<a class='card-text btn btn-block btn-primary' href="{% url 'blog:posts_detail' post.id %}">
+				{{post.postcomment_set.all.count}} comment{{post.postcomment_set.all.count | pluralize}}</a>
+		</div>
+		<div class="media-body col-sm-7">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title mt-0 mb-1">{{post.title}}</h5>
+					<hr/>
+					<div class="card-text">{{post.content|safe|slice:'150'}}</div>
+				</div>
+				<div class="card-footer">
+					<div class="row">
+						<div class="col-sm-8">
+							<div class="row">
+								<div class="col-sm-3">
+									<img class="rounded-circle" width='70rem' 
+										src="data:image/jpg;base64,{{post.author.profile.image.data}}"/>
+								</div>
+								<div class="col-sm-9">
+									<i>{{ post.author.profile }}</i></small><br/>
+									<small>{{post.created_on}}</small>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<small>
+								<a class="btn btn-primary" href="{% url 'blog:posts_detail' post.slug %}">Read More</a>
+							</small>
+						</div>
+					</div>
+				</div>
+			</div>		
+		</div>
+	</div>
+</li>
+<hr/>

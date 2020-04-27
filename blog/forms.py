@@ -1,12 +1,23 @@
-from .models import Comment
 from django import forms
-
 from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 
-class CommentForm(forms.ModelForm):
+from .models_posts import PostComment
+from .models_questions import QuestionComment
+
+class PostCommentForm(forms.ModelForm):
 	class Meta:
-		model = Comment
+		model = PostComment
 		fields = ('name', 'email', 'body')
+
+		widgets = {
+			'body': SummernoteWidget()
+		}
+
+class QuestionCommentForm(forms.ModelForm):
+	class Meta:
+		model = QuestionComment
+		fields = ('name', 'email', 'body')
+
 		widgets = {
 			'body': SummernoteWidget()
 		}

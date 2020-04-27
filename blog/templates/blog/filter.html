@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+	<div class="row">
+		<div class="col-sm-9">
+			<h4><i><b>{{title}}</b></i></h4>
+			<hr/>
+			{% if page_obj %}
+				{% if atposts %}
+					{% for post in page_obj %}
+						{% include "posts/post.html" %}
+					{% endfor %}
+				{% else %}
+					{% for atquestion in page_obj %}
+						{% include "questions/question.html" %}
+					{% endfor %}
+				{% endif %}
+			{% else %}
+				<p><i>There are No Items Found!</i></p>
+			{% endif %}
+			{% include "pagination.html" %}
+		</div>
+		{% include "sidebar.html" %}
+	</div>
+{% endblock content %}

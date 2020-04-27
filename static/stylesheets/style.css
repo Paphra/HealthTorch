@@ -1,0 +1,30 @@
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: white;
+    /*background-image: url('/images/bg-img-1.jpg');*/
+}
+
+.footer{
+  padding-bottom: 20px;
+  padding-top: 60px;
+  bottom: 0;
+}
+
+.errors{
+  color: red;
+  padding: 10px;
+  text-align: right;
+}
+
+.errors ul li {
+  list-style-type: none;
+}
+
+#content{
+  margin-top: 30px;
+}
+
+.comment{
+  margin-left: 5%;
+}

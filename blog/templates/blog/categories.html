@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-sm-9">
+			<h4><i><b>All Categories</b></i></h4>
+			<hr/>
+			{% if categories.count %}
+				<ul class="list-group">
+					{% for category in categories %}
+						<li class="list-group-item dropdown-toggle"
+							data-toggle="collapse" href="#disp_{{category.id}}" role="button" 
+							aria-haspopup="true" aria-expanded="false">{{category.name}}</li>
+						<div id="disp_{{category.id}}" class="collapse card show">
+							<a class="dropdown-item" 
+								href="{% url 'blog:posts_category' category.id %}">
+								<p style="margin-left:10px">Posts 
+									<span class="badge badge-danger">{{category.posts.count}}</span>
+								</p>
+							</a>
+							<a class="dropdown-item" 
+								href="{% url 'blog:questions_category' category.id %}">
+								<p  style="margin-left:10px">Questions 
+									<span class="badge badge-danger">{{category.questios.count}}</span>
+								</p>
+							</a>
+						</div>
+					{% endfor %}
+				</ul>
+			{% else %}
+				<p><i>There are No Categories</i></p>
+			{% endif %}
+		</div>
+		{% include "sidebar.html" %}
+	</div>
+{% endblock content %}
