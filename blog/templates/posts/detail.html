@@ -40,7 +40,7 @@
 			<hr/>
 			<div class="comment">
 				{% if page_obj %}
-					<h4><i>{{post.comments.count}} Comment{{post.comments.count|pluralize}}</i></h4>
+					<h4><i>{{page_obj.object_list.count}} Comment{{page_obj.object_list.count|pluralize}}</i></h4>
 					{% for comment in page_obj %}
 						{% include "comments/comment.html" %}
 					{% endfor %}

@@ -184,5 +184,3 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEBUG = False
 
 DEBUG_PROPAGATE_EXCEPTIONS = True
-
-#STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
