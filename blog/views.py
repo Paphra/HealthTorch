@@ -3,93 +3,44 @@ import datetime
 from django.views import generic
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from django.core.paginator import (Paginator, PageNotAnInteger, EmptyPage)
+from django.contrib.auth.models import Group, User
 
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib.postgres.search import SearchQuery, SearchVector
 
-from .models import Image, ImageGroup, Category, Subscriber, About
+from .models import Image, ImageGroup, Category, Subscriber, About, Partner
 from .models_posts import Post
 from .models_questions import Question
 
 
-def set_context(context, request, search=True):
+def set_context(request, context, search=True):
 	context['c_user'] = request.user
 	context['search'] = search
 	context['categories'] = Category.objects.all()
-
-def post_list(request):
-	object_list = Post.objects.filter(status=1).order_by('-created_on')
+	context['partners'] = Partner.objects.filter(active=True)
 	
-	paginator = Paginator(object_list, 3)
-	page = request.GET.get('page')
-	try:
-		post_list = paginator.page(page)
-	except PageNotAnInteger:
-		post_list = paginator.page(1)
-	except EmptyPage:
-		post_list = paginator.page(paginator.num_pages)
-
-	template_name = 'blog/index.html'
-	
-	return render(
-		request, template_name,
-		{
-			'Page': page,
-			'post_list': post_list
-		}
-	)
-
-def post_detail(request, slug):
-	template_name = 'posts/post_detail.html'
-	post = get_object_or_404(Post, slug=slug)
-	comments = post.comments.filter(active=True)
-	new_comment = None
-
-	# Comment Posted
-	if request.method == 'POST':
-		comment_form = CommentForm(data=request.POST)
-		if comment_form.is_valid():
-			# Create Comment Object but don't dave to database yet
-			new_comment = comment_form.save(commit=False)
-			# Assign the current post to the comment
-			new_comment.post = post
-			#save the comment to the database
-			new_comment.save()
-
-			return HttpResponseRedirect(reverse('blog:posts_detail', args=(post.slug, )))
-	else:
-		comment_form = CommentForm()
-	
-	return render(
-		request, template_name,
-		{
-			'post': post,
-			'comments': comments,
-			'new_comment': new_comment,
-			'comment_form': comment_form
-		}
-	)
-
 def about(request):
-	author_group = Group.objects.filter(name="Author")[0]
+	author_group = Group.objects.filter(name="Authors")[0]
 	authors = User.objects.filter(groups=author_group.id)
 	about = About.objects.all()
 	
 	if about:
 		about = about[0]
 
-	return render(	
-		request,
-		"blog/about.html",
-		{
+	context = {
 			'authors': authors,
 			'about': about,
 			'atabout': True,
-			"c_user": request.user,
 			"title": "About Us"
 		}
+	set_context(request, context, False)
+
+	return render(	
+		request,
+		"blog/about.html",
+		context
 	)
 
 def convert_image(file):
@@ -108,42 +59,34 @@ def index(request):
 	"""
 	latest_posts = Post.objects.filter(status=1).order_by('-created_on')[:3]
 	other_posts = Post.objects.filter(status=1).order_by('-created_on')[3:15]
-	categories = Category.objects.all()
+	context = {
+			'title': 'Home',
+			'latest_posts': latest_posts,
+			'other_posts': other_posts,
+			'athome': True,
+		}
+	set_context(request, context)
 	return render(
 		request,
 		"blog/index.html",
-		{
-			'title': 'Home',
-			'search': True,
-			'latest_posts': latest_posts,
-			'other_posts': other_posts,
-			'categories': categories,
-			'athome': True,
-			'c_user': request.user
-		}
+		context
 	)	
 
 
 def categories(request):
 	template_name = "blog/categories.html"
-	categories = Category.objects.all()
 	context = {
-		'categories': categories,
-		'c_user': request.user,
 		'title': 'Categories',
 		'atcategories': True,
 	}
-	
+	set_context(request, context)
+
 	return render(request, template_name, context)
 
 # START Filter VIEW
 def filter(request):
 	template = "blog/filter.html"
-	context = {
-		'c_user': request.user,
-		'search': True,
-		'categories': Category.objects.all()
-	}
+	context = {}
 	section = request.GET.get('section')
 	month = request.GET.get('month')
 	year = int(request.GET.get('year'))
@@ -153,12 +96,12 @@ def filter(request):
 			context['atposts'] = True
 			context['title'] = 'Filtered Posts for ' + str(year) + '/' +str(month)
 			items = Post.objects.filter(
-				created_on__year=year).order_by('-created_on')
+				created_on__year=year, status=1).order_by('-created_on')
 		else:
 			context['atquestions'] = True
 			context['title'] = 'Filtered Questions for ' + str(year) + '/' +str(month)
 			items = Question.objects.filter(
-				question_date__year=year).order_by('-question_date')
+				created_on__year=year, status=1).order_by('-created_on')
 	else:
 		month = int(month)
 		if section == 'Posts':
@@ -166,13 +109,13 @@ def filter(request):
 			context['title'] = 'Filtered Posts for ' + str(year) + '/' +str(month)
 			items = Post.objects.filter(
 				created_on__year=year, 
-				created_on__month=month).order_by('-created_on')
+				created_on__month=month, status=1).order_by('-created_on')
 		else:
 			context['atquestions'] = True
 			context['title'] = 'Filtered Questions for ' + str(year) + '/' +str(month)
 			items = Question.objects.filter(
-				question_date__year=year,
-				question_date__month=month).order_by('-question_date')
+				created_on__year=year,
+				created_on__month=month, status=1).order_by('-created_on')
 	
 	context['f_year'] = year
 	context['f_month'] = month
@@ -180,6 +123,8 @@ def filter(request):
 	page_number = request.GET.get('page')
 	page_obj = paginator.get_page(page_number)
 	context['page_obj'] = page_obj
+	set_context(request, context)
+
 	return render(request, template, context)
 # END Filter VIEW
 
@@ -203,15 +148,16 @@ def images(request):
 		return SaveImage(request)
 	else:
 		groups = ImageGroup.objects.all()
-		return render(
-			request,
-			'blog/images.html',
-			{
+		context = {
 				"title": "Images",
-				"c_user": request.user,
 				"groups": groups,
 				'atimages': True,
 			}
+		set_context(request, context, False)
+		return render(
+			request,
+			'images/index.html',
+			context
 		)
 
 def images_group(request, pk):
@@ -219,9 +165,8 @@ def images_group(request, pk):
 		return HttpResponseRedirect('/admin')
 	if request.method == "POST":
 		return SaveImage(request)
-	
 	else:
-		template_name = 'blog/images_group.html'
+		template_name = 'images/images_group.html'
 		group = get_object_or_404(ImageGroup, pk=pk)
 		images = group.images.all()
 		context = {
@@ -242,6 +187,15 @@ def image_detail(request, image_id):
 		return HttpResponseRedirect('/admin')
 	old_image = get_object_or_404(Image, pk=image_id)
 	groups = ImageGroup.objects.all()
+	
+	context = {
+		'title': 'Image',
+		'image': old_image,
+		'groups': groups,
+		'atimages': True,
+	} 
+	set_context(request, context, False)
+
 	if request.method == "POST":
 		old_image.title = request.POST['title']
 		old_image.group = groups.get(pk=request.POST['group'])
@@ -254,14 +208,8 @@ def image_detail(request, image_id):
 	else:
 		return render(
 			request,
-			"blog/image_detail.html",
-			{
-				'title': 'Image',
-				'image': old_image,
-				'groups': groups,
-				'c_user': request.user,
-				'atimages': True,
-			} 
+			"images/image_detail.html",
+			context
 		)
 #END Images VIEWS
 
@@ -276,22 +224,20 @@ def search(request):
 	context = {
 		'title': 'Search Results',
 		'query': phrase,
-		'section': section,
-		'search': True,
-		'categories': Category.objects.all(),
-		'c_user': request.user,
+		'section': section
 	}
+	set_context(request, context, True)
 
 	if section == 'Posts':
 		context['atposts'] = True
 		post_vector = SearchVector('title') + SearchVector('content')
 		items = Post.objects.annotate(
-			search=post_vector).filter(search=query).order_by('-created_on')
+			search=post_vector).filter(search=query, status=1).order_by('-created_on')
 	else:
 		context['atquestions'] = True
-		question_vector = SearchVector('question_text')
+		question_vector = SearchVector('content')
 		items = Question.objects.annotate(
-			search=question_vector).filter(search=query).order_by('-question_date')
+			search=question_vector).filter(search=query, status=1).order_by('-created_on')
 	
 	paginator = Paginator(items, 20) # Show 20 per page.
 	page_number = request.GET.get('page')
@@ -325,12 +271,14 @@ def subscribe(request):
 
 def subscribed(request, pk):
 	subscriber = get_object_or_404(Subscriber, pk=pk)
-	return render(request, 'blog/subscribed.html', {
+	context = {
 		'title': 'Successfully Subscribed',
-		'c_user': request.user,
 		'subscriber': subscriber,
 		'subscribed': True,
-	})
+	}
+	set_context(request, context, False)
+
+	return render(request, 'blog/subscribed.html', context)
 
 @csrf_exempt
 def unsubscribe(request, pk):
@@ -344,12 +292,13 @@ def unsubscribe(request, pk):
 
 def unsubscribed(request, pk):
 	subscriber = get_object_or_404(Subscriber, pk=pk)
-	return render(request, 'blog/subscribed.html', {
+	context = {
 		'title': 'Successfully Unsubscribed',
-		'c_user': request.user,
 		'subscriber': subscriber,
 		'subscribed': False,
-	})
+	}
+	set_context(request, context, False)
+	return render(request, 'blog/subscribed.html', context)
 
 def resubscribe(request, pk):
 	if request.method != 'POST':

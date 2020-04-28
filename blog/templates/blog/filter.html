@@ -11,7 +11,9 @@
 					{% endfor %}
 				{% else %}
 					{% for atquestion in page_obj %}
-						{% include "questions/question.html" %}
+						{% for question in page_obj %}
+							{% include "questions/question.html" %}
+						{% endfor %}
 					{% endfor %}
 				{% endif %}
 			{% else %}

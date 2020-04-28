@@ -1,62 +1,106 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block content %}
 	<div class="row">
 		<div class="col-sm-9">
-			<h4><i><b>{{question.title}}</b></i></h4>
-			<hr/>
-			<div class="row">
-				<div class="col-md-9">
-					<img class="rounded img-responsive" width="100%" 
-						src="data:image/jpg;base64,{{question.image.data}}" />
+			<div class="card shadow">
+				<div class="card-header">
+					<h4><i><b>{{title}}</b></i></h4>
 				</div>
-				<div class="col-md-3">
-					<div class="card padding">
-						<div class="row card-body">
-							<div class="col-sm-12">
-								<small>Questioned: <strong>{{question.question_date}}</strong></small><br/>
-							</div>
-							<div class="col-3 col-md-12">
-								<img class="rounded card-image" width="100%"
-									src="data:image/jpg;base64,{{question.author.profile.image.data}}" />
-							</div>
-							<div class="col-9 col-md-12">
-								<small><strong>By:</strong> </small>
-								<small>{{question.author.profile.title}} {{question.author.profile}}</small> | 
-								<small>{{question.author.profile.profession}} @ {{question.author.profile.employment}}</small>
+				<div class="row card-body">
+					<div class="col-md-9">
+						<p class="card-text muted">
+							{% if question.answer %}
+								<p class="alert alert-success">Answered</p>
+							{% else %}
+								<p class="alert alert-danger">No Yet Answered</p>
+							{% endif %}
+						</p>
+						<hr/>
+						{{question.content|safe}}
+					</div>
+					<div class="col-md-3">
+						<div class="card padding">
+							<div class="row card-body">
+								<div class="col-sm-12">
+									<small>Asked: <strong>{{question.created_on}}</strong></small>
+									<hr/>
+								</div>
+								<div class="col-3 col-md-12">
+									<img class="rounded-circle card-image" width="100%"
+										src="{% static 'images/user.jpg' %}" />
+								</div>
+								<div class="col-9 col-md-12">
+									<p><strong>By:</strong> <b>{{question.name}}</b></p> 
+									<small><a href="mailto:{{question.email}}" target="_blank">
+										{{question.email}}</a></small>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="card" style="padding:10px">
-				{{question.content | safe}}
-			</div>
+			<hr/>
+			{% if question.answer %}
+				<div class="card shadow">
+					<h5 class="card-header">{{question.answers.count}} Answer{{question.answers.count|pluralize}}</h5>
+					<div class="card-body">
+						{% if question.answers %}
+							<div class="container">
+								{% for answer in question.answers.all %}
+									<div class="card shadow conatiner">
+										<div class="card-body">
+											{{answer.content|safe}}
+										</div>
+										<div class="card-header">
+											<div class="row card-body">
+												<div class="col-sm-12">
+													<small>Answered: <strong>{{answer.created_on}}</strong></small>
+													<hr/>
+												</div>
+												<div class="col-2">
+													<img class="rounded-circle card-image" width="100%"
+														src="data:image/jpg;base64,{{answer.user.profile.image.data}}" />
+												</div>
+												<div class="col-10">
+													<small><strong>By:</strong> <b>{{answer.user.profile}}</b></small><br/> 
+													<small><a href="mailto:{{answer.user.email}}" target="_blank">
+														{{answer.user.email}}</a></small><br/>
+													<small>{{answer.user.profile.position}} @ {{answer.user.profile.employment}}</small>
+												</div>
+											</div>
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+						{% else %}
+						{% endif %}
+					</div>
+				</div>			
+			{% endif %}
+			
 			<div id="arrive"></div>
 			<div></div>
 			<hr/>
 			<div class="comment">
 				{% if page_obj %}
-					<h4>Comments</h4>
+					<h4><i>{{page_obj.object_list.count}} Comment{{page_obj.object_list.count|pluralize}}</i></h4>
 					{% for comment in page_obj %}
-						{% include "comment.html" %}
+						{% include "comments/comment.html" %}
 					{% endfor %}
 					
 					{% include "pagination.html" %}
-
-					<hr/>
-					<div class="card">
-						<div class="card-header">
-							<h5>Send Comment</h5>
-						</div>
-						<div class="card-body>">
-							<form action="{% url 'questions:comment' question.id %}#arrive" method='POST'>
-								{% include "comments/form.html" %}
-							</form>
-						</div>
-					</div>
 				{% else %}
 					<p class="text-center">No Comments</p>
+				{% endif %}
+				<hr/>
+				{% if new_comment %}
+					<div class="alert alert-success text-center">
+						<p><i>Your Comment is Awaiting moderation</i></p>
+					</div>
+				{% else %}
+					{% include "comments/form.html" %}
 				{% endif %}
 			</div>
 			<hr/>

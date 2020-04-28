@@ -10,12 +10,15 @@ class PostAdmin(SummernoteModelAdmin):
 	list_filter = ('status', 'created_on')
 	search_fields = ['title', 'content']
 	prepopulated_fields = {'slug': ('title',)}
-	actions = ['publish_posts']
+	actions = ['publish_posts', 'draft_qposts']
 
 	summernote_fields = ('content')
 
 	def publish_posts(self, request, queryset):
 		queryset.update(status=1)
+	
+	def draft_posts(self, request, queryset):
+		queryset.update(status=0)
 
 class PostCommentAdmin(SummernoteModelAdmin):
 	list_display = ('name', 'post', 'created_on', 'active')

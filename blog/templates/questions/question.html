@@ -1,0 +1,38 @@
+{% load static %}
+
+<li class="card shadow">
+	<h6 class="card-header"><b>Category: </b>{{question.category}} | 
+		<small>
+			{% if question.answer %}
+				<b class="text-success">Answered</b>
+			{% else %}
+				<b class="text-danger">Not Yet Answered</b>
+			{% endif %}
+		</small>
+	</h6>
+	<div class="card-body">
+		{{question.content | safe | slice:300}}
+	</div>
+		
+	<div class="card-footer shadow">
+		<div class="row card-body">
+			<div class="col-sm-6">
+				<small>Asked: <strong>{{question.created_on}}</strong></small><br>
+				<a class="btn btn-primary btn-sm btn-block" href="{% url 'blog:questions_detail' question.id %}">
+					View</a>
+			</div>
+			<div class="col-sm-6 row">
+				<div class="col-2">
+					<img class="rounded-circle card-image" width="100%"
+						src="{% static 'images/user.jpg' %}" />
+				</div>
+				<div class="col-10">
+					<small><strong>By:</strong> <b>{{question.name}}</b></small><br/> 
+					<small><a href="mailto:{{question.email}}" target="_blank">
+						{{question.email}}</a></small>
+				</div>
+			</div>
+		</div>
+	</div>
+</li>
+<hr/>

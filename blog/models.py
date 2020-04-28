@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django_summernote.fields import SummernoteTextField
 
 class Category(models.Model):
 	"""
@@ -46,6 +47,9 @@ class Profile(models.Model):
 	user = models.OneToOneField(
 		User, on_delete=models.CASCADE)
 	title = models.CharField(max_length=30, blank=True)
+	phone = models.CharField(max_length=15, blank=True)
+	facebook = models.CharField(verbose_name='Facebook Username',
+		max_length=20, blank=True)
 	bio = models.TextField(blank=True)
 	address = models.CharField(max_length=100, blank=True)
 	qualification = models.CharField(max_length=100, blank=True)
@@ -85,8 +89,27 @@ class Subscriber(models.Model):
 
 class About(models.Model):
 	site_title = models.CharField(max_length=200)
-	info = models.TextField('About Us')
-	last_modified = models.DateTimeField('date modified')
+	info = models.TextField()
+	last_modified = models.DateTimeField(auto_now=True)
 
 	def __str__(self):
 		return "About Us"
+
+class Partner(models.Model):
+	name = models.CharField(max_length=200)
+	email = models.EmailField(max_length=100)
+	phone = models.CharField(max_length=30)
+	website = models.CharField(max_length=100)
+	address = models.CharField(max_length=400)
+	image = models.ForeignKey(
+		Image, related_name="partners", on_delete=models.SET_NULL, 
+		null=True, blank=True)
+	description = SummernoteTextField()
+	active = models.BooleanField(default=True)
+	created_on = models.DateTimeField(auto_now_add=True)
+	
+	class Meta:
+		ordering = ['-created_on']
+
+	def __str__(self):
+		return self.name

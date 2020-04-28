@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load crispy_forms_tags %}
 
 {% block content %}
 	<div class="row">
@@ -16,7 +15,8 @@
 					<div class="card shadow">
 						<div class="row card-body">
 							<div class="col-sm-12">
-								<small>Posted: <strong>{{post.created_on}}</strong></small><br/>
+								<small>Posted: <strong>{{post.created_on}}</strong></small>
+								<hr/>
 							</div>
 							<div class="col-3 col-md-12">
 								<img class="rounded card-image" width="100%"
@@ -35,6 +35,7 @@
 			<div class="card shadow" style="padding:10px">
 				{{post.content | safe}}
 			</div>
+			
 			<div id="arrive"></div>
 			<div></div>
 			<hr/>
@@ -55,18 +56,7 @@
 						<p><i>Your Comment is Awaiting moderation</i></p>
 					</div>
 				{% else %}
-					<div class="card shadow">
-						<div class="card-header">
-							<h5>Leave a Comment</h5>
-						</div>
-						<div class="card-body">
-							<form action="#arrive" method='POST'>
-								{{form | crispy}}
-								{% csrf_token %}
-								<button type="submit" class="btn btn-primary">Comment</button>
-							</form>
-						</div>
-					</div>
+					{% include "comments/form.html" %}
 				{% endif %}
 			</div>
 			<hr/>

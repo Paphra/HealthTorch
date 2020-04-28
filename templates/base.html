@@ -6,7 +6,8 @@
     <title>{{title}} | HT Ug</title>
     <meta charset='utf-8' />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" />
+
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" 
@@ -61,7 +62,7 @@
               </ul>
               
               <ul class="navbar-nav navbar-right">
-                <li class="nav-item bg-white">
+                <li class="nav-item bg-white" style="border-radius:2rem; padding: 0px 10px">
                   <a class="nav-link text-danger" 
                     href="{% url 'blog:questions_ask' %}">Ask</a>
                 </li>
@@ -148,59 +149,45 @@
             <div class="col-sm-3"></div>
           </div>
           <hr/>
-          <div class="row">
+          <div class="row text-white">
             <div class="col-sm-9">
               <h4>Useful Internal Links</h4>
               <hr/>
               <div class="row">
                 <div class="col-sm-4">
-                  <ul class="list-group">
-                    <li class="list-group-item {% if athome %}active{% endif %}">
-                      <a href="/">Home <span class="fas fa-home"></span></a>
-                    </li>
-                    <li class="list-group-item {% if atposts %}active{% endif %}"> 
-                      <a href="{% url 'blog:posts_index' %}">
-                        Posts <span class="fas fa-book-open"></span>
-                      </a>
-                    </li>
-                    <li class="list-group-item {% if atquestions %}active{% endif %}">
-                      <a href="{% url 'blog:questions_index' %}">
-                        Questions <span class="fas fa-question"></span>
-                      </a>
-                    </li>
-                  </ul>
+                  <div class="nav flex-column nav-pills">
+                    <a class="btn btn-default btn-block btn-success 
+                      {% if athome %}active{% endif %}" href="/">
+                      Home <span class="fas fa-home"></span></a>
+                    <a class="btn btn-default btn-block btn-success 
+                      {% if atposts %}active{% endif %}" href="{% url 'blog:posts_index' %}">
+                        Posts <span class="fas fa-book-open"></span></a>
+                    <a class="btn btn-default btn-block btn-success 
+                      {% if atquestions %}active{% endif %}" href="{% url 'blog:questions_index' %}">
+                      Questions <span class="fas fa-question"></span></a>
+                  </div>
                 </div>
                 <div class="col-sm-4">
-                  <ul class="list-group">
-                    <li class="list-group-item {% if atabout %}active{% endif %}">
-                      <a href="{% url 'blog:about' %}" >
-                        About <span class="fas fa-info"></span>
-                      </a>
-                    </li>
-                  </ul>
+                  <div class="nav flex-column nav-pills">
+                    <a class="btn btn-success btn-block 
+                      {% if atabout %}active{% endif %}" href="{% url 'blog:about' %}" >
+                      About <span class="fas fa-info"></span></a>
+                  </div>
                 </div>
                 <div class="col-sm-4">
-                  <ul class="list-group">
+                  <div class="nav flex-column nav-pills">
                     {% if c_user.is_authenticated %}
                       {% if c_user.groups %}
-                        <li class="list-group-item">
-                          <a href="/admin">
-                            Dashboard <span class="fas fa-user-cog"></span>
-                          </a>
-                        </li>
-                        <li class="list-group-item {% if atimages %}active{% endif %}">
-                          <a href="{% url 'blog:images' %}">
-                            Images <span class="fas fa-image"></span>
-                          </a>
-                        </li>
+                        <a class="btn btn-success btn-block" href="/admin">
+                          Dashboard <span class="fas fa-user-cog"></span></a>
+                        <a class="btn btn-success btn-block 
+                          {% if atimages %}active{% endif %}" href="{% url 'blog:images' %}">
+                          Images <span class="fas fa-image"></span></a>
                       {% endif %}
-                      <li class="list-group-item">
-                        <a href="{% url 'blog:logout' %}">
-                          Logout <span class="fas fa-sign-out-alt"></span>
-                        </a>
-                      </li>
+                      <a class="btn btn-success btn-block" href="{% url 'blog:logout' %}">
+                        Logout <span class="fas fa-sign-out-alt"></span></a>
                     {% endif %}
-                  </ul>
+                  </div>
                 </div>
               </div>
             </div>

@@ -8,28 +8,25 @@
 				{% if groups.count %}
 					<ul class="list-group">
 						{% for group in groups %}
-							<li class="list-group-item dropdown-toggle"
-          			data-toggle="collapse" href="#d_{{group.id}}" role="button" 
-            		aria-haspopup="true" aria-expanded="false">{{group.name}}</li>
-							<div id="d_{{group.id}}" class="collapse card-columns jumbotron">
+							<li class="list-group-item">
+								{{group.name}}
 								{% if group.images.count %}
 									<p>
 										<i><b>{{ group.images.count }} image{{ group.images.count|pluralize }}</b> in this Group</i>
+									  <a href="{% url 'blog:images_group' group.id %}"
+											class="btn btn-primary btn-sm">View</a>
 									</p>
-									<p class="text-right"><small>
-										<a href="{% url 'blog:images_group' group.id %}"
-											class="btn btn-primary">View</a>
-									</small></p>
 								{% else %}
 									<p><i>There are No Images in </i><b>{{ group.name }}</b></p>
 								{% endif %}
-							</div>
+							</li>
 						{% endfor %}
 					</ul>
 				{% else %}
 					<p><i>There are No Image Groups.<br/>
 						Please, go to Admin Dashboard and Add Some Groups.</i></p>
 				{% endif %}
+				<hr/>
 			</div>
 			{% include "images/image_form.html" %}
 		</div>

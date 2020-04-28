@@ -5,10 +5,15 @@ body {
     /*background-image: url('/images/bg-img-1.jpg');*/
 }
 
+.list-group-item.active{
+  color: inherit;
+}
+
 .footer{
   padding-bottom: 20px;
   padding-top: 60px;
   bottom: 0;
+  color: white;
 }
 
 .errors{

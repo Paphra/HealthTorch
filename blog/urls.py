@@ -4,9 +4,9 @@ from .feeds import LatestPostsFeed
 
 app_name = 'blog'
 urlpatterns = [
-		#path('', views.post_list, name='home'),		
+
+		# Feeds
     path("feed/rss", LatestPostsFeed(), name='post_feed'),
-		path('<slug:slug>/', views.post_detail, name='post_detail'),
 		
 		# index
 		path('', views.index, name="index" ),

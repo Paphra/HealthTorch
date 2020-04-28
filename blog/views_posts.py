@@ -7,14 +7,15 @@ from django.urls import reverse
 from django.core.paginator import Paginator
 
 from .models_posts import Post, PostComment
-from .models import Category
+from .models import Category, Partner
 from .forms import PostCommentForm
 
 
-def set_context(context, request, search=True):
+def set_context(request, context, search=True):
 	context['c_user'] = request.user
 	context['atposts'] = True
 	context['search'] = search
+	context['partners'] = Partner.objects.filter(active=True)
 	context['categories'] = Category.objects.all()
 
 def index(request):
@@ -29,7 +30,7 @@ def index(request):
 	page_number = request.GET.get('page')
 	page_obj = paginator.get_page(page_number)
 	context['page_obj'] = page_obj
-	set_context(context, request)
+	set_context(request, context)
 	return render(request, template_name, context)	
 
 def detail(request, slug):
@@ -46,7 +47,7 @@ def detail(request, slug):
 	page_number = request.GET.get('page')
 	page_obj = paginator.get_page(page_number)
 	context['page_obj'] = page_obj
-	set_context(context, request, False)
+	set_context(request, context, False)
 	new_comment = None
 
 	if request.method == 'POST':
@@ -87,7 +88,7 @@ def last_posts(request, days):
 	page_obj = paginator.get_page(page_number)
 	context['page_obj'] = page_obj
 	context['title'] = 'Posts from Last ' + str(days) + ' day(s)'
-	set_context(context, request)
+	set_context(request, context)
 	
 	return render(request, template_name, context)
 
@@ -98,8 +99,8 @@ def category_detail(request, pk):
 		'category': category,
 		'title': category.name,
 	}
-	set_context(context, request)
-	posts = category.posts.order_by('-created_on')
+	set_context(request, context)
+	posts = category.posts.filter(status=1).order_by('-created_on')
 	
 	paginator = Paginator(posts, 20) # Show 20 per page.
 	page_number = request.GET.get('page')
