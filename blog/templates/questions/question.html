@@ -16,12 +16,12 @@
 		
 	<div class="card-footer shadow">
 		<div class="row card-body">
-			<div class="col-sm-6">
+			<div class="col-md-6">
 				<small>Asked: <strong>{{question.created_on}}</strong></small><br>
 				<a class="btn btn-primary btn-sm btn-block" href="{% url 'blog:questions_detail' question.id %}">
 					View</a>
 			</div>
-			<div class="col-sm-6 row">
+			<div class="col-md-6 row">
 				<div class="col-2">
 					<img class="rounded-circle card-image" width="100%"
 						src="{% static 'images/user.jpg' %}" />

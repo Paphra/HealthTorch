@@ -3,7 +3,7 @@
 
 {% block content %}
 	<div class="row">
-		<div class="col-sm-9">
+		<div class="col-md-9">
 			<div class="card shadow">
 				<div class="card-header">
 					<h4><i><b>{{title}}</b></i></h4>
@@ -23,7 +23,7 @@
 					<div class="col-md-3">
 						<div class="card padding">
 							<div class="row card-body">
-								<div class="col-sm-12">
+								<div class="col-md-12">
 									<small>Asked: <strong>{{question.created_on}}</strong></small>
 									<hr/>
 								</div>
@@ -49,13 +49,13 @@
 						{% if question.answers %}
 							<div class="container">
 								{% for answer in question.answers.all %}
-									<div class="card shadow conatiner">
+									<div class="card shadow">
 										<div class="card-body">
 											{{answer.content|safe}}
 										</div>
 										<div class="card-header">
 											<div class="row card-body">
-												<div class="col-sm-12">
+												<div class="col-md-12">
 													<small>Answered: <strong>{{answer.created_on}}</strong></small>
 													<hr/>
 												</div>

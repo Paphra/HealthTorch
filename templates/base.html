@@ -90,10 +90,10 @@
         <div class="container">
           {% if search %}
             <div class="row">
-              <div class="col-sm-6"></div>
-              <div class="col-sm-6">
+              <div class="col-md-6"></div>
+              <div class="col-md-6">
                 <form class="form-inline" action="{% url 'blog:search' %}">
-                  <div class="row shadow" style="margin-left: 10px;">
+                  <div class="row shadow" style="margin-left: 2%;margin-right:2%">
                     <select name="s" class="col-4 form-control">
                       <option value="Posts" {% if atposts %}selected{% endif %}>Posts</option>
                       <option value="Questions" {% if atquestions %}selected{% endif %}>Questions</option>
@@ -120,8 +120,8 @@
       <footer class="footer bg-success">
         <div class="container">
           <div class="row">
-            <div class="col-sm-3"></div>
-            <div class="col-sm-6">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
               <p class="text-center"><i>Get Timely Updates</i></p>
               <form action="{% url 'blog:subscribe' %}" method="POST">
                 {% csrf_token %}
@@ -146,15 +146,15 @@
                 </div>
               </form>
             </div>
-            <div class="col-sm-3"></div>
+            <div class="col-md-3"></div>
           </div>
           <hr/>
           <div class="row text-white">
-            <div class="col-sm-9">
+            <div class="col-md-9">
               <h4>Useful Internal Links</h4>
               <hr/>
               <div class="row">
-                <div class="col-sm-4">
+                <div class="col-md-4">
                   <div class="nav flex-column nav-pills">
                     <a class="btn btn-default btn-block btn-success 
                       {% if athome %}active{% endif %}" href="/">
@@ -167,14 +167,14 @@
                       Questions <span class="fas fa-question"></span></a>
                   </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-md-4">
                   <div class="nav flex-column nav-pills">
                     <a class="btn btn-success btn-block 
                       {% if atabout %}active{% endif %}" href="{% url 'blog:about' %}" >
                       About <span class="fas fa-info"></span></a>
                   </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-md-4">
                   <div class="nav flex-column nav-pills">
                     {% if c_user.is_authenticated %}
                       {% if c_user.groups %}
@@ -191,7 +191,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-sm-3 text-right">
+            <div class="col-md-3 text-right">
               <a class="btn btn-primary" href='#top'> <span class="fas fa-arrow-up"></span></a>
               <hr/>
               <p>&copy; Copyright <b id='copy_year'></b></p>
