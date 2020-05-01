@@ -1,23 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
-	<div class="container">
-		<div class='row'>
-			<div class='col-md-10'>
-				<div class="card">
-					<div  class="row">
-						<div class="col-md-8 text-center">
-							<h4 class="card-title">Current Image</h4>
-							<hr/>
-							<img src="data:image/jpg;base64,{{image.data}}" alt="{{image.title}}"
-								class="rounded" width="100%"/>
-							<hr/>
-						</div>
-						{% include "images/image_form.html" %}
-					</div>
+	<div id="content" class="container">
+		<div class="card shadow">
+			<div  class="row card-body">
+				<div class="col-md-8 text-center">
+					<h4 class="card-header">Current Image</h4>
+					<img src="data:image/jpg;base64,{{image.data}}" alt="{{image.title}}"
+						class="rounded" width="80%"/>
+					<hr/>
 				</div>
+				{% include "images/image_form.html" %}
 			</div>
-			<div class='col-md-2'>
-				<a href="{% url 'blog:images' %}" class="btn btn-success btn-block">All Images</a>
+			<div class='card-footer text-center'>
+				
+				<a href="{% url 'blog:images_group' image.group.id %}" class="btn btn-primary">
+					<span class="fas fa-chevron-left"></span> Back to Group
+				</a>
+				<a href="{% url 'blog:images' %}" class="btn btn-success">
+					All Images <span class="fas fa-image"></span>
+				</a>
 			</div>
 		</div>
 	</div>

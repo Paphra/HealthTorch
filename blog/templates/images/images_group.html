@@ -27,6 +27,11 @@
 				{% else %}
 					<p><i>There are no Images in this Group</i></p>
 				{% endif %}
+				<div class='text-center'>
+					<a href="{% url 'blog:images' %}" class="btn btn-success">
+						All Images <span class="fas fa-image"></span>
+					</a>
+				</div>
 				</div>
 			{% include "images/image_form.html" %}
 		</div>
